@@ -25,9 +25,9 @@ const testdata = [
     { tid: 9, name: 'a' },
     { tid: 9, name: 'b' },
     { tid: 9, name: 'c' },
+    { tid: 10, name: 'a' },
+    { tid: 10, name: 'b' },
 ];
-
-const isRequired = () => { throw new Error('param is required'); };
 
 //Transform data to get the array from transaction 
 groupedTransactions = (data) => {
@@ -176,4 +176,5 @@ const prevItemsets = apriori.prevItemsets;
 //Association Rules
 const transactionsByTID = groupedTransactions(testdata);
 const numberOfTransations = transactionsByTID.length;
-associationRules(fqis, numberOfTransations, prevItemsets);
+const rules = associationRules(fqis, numberOfTransations, prevItemsets);
+console.log(rules);

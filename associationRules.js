@@ -14,19 +14,18 @@ exports.associationRules = (frequentItemsets, nOfTransactions, prevItemsets) => 
                 const ABsupport = itemset.count / nOfTransactions;
                 //TODO 
                 //Find support value in array of value pair object
-                const aValue = prevItemsets.find((el) => {
-                    return el.name === a;
-                });
+                const aValue = prevItemsets.find((el) => el.name === a);
                 const bValue = prevItemsets.find((el) => {
-                    if (el.length < 2) return el.name === b[0];
+                    if (b.length < 2) return el.name === b.toString();
                     else return el.name === b;
                 });
-                console.log(bValue);
-                Asupport = aValue.count / nOfTransactions;
+                const Asupport = aValue.count / nOfTransactions;
+                const Bsupport = bValue.count / nOfTransactions;
                 associations.push({
                     'association': a + ' to ' + b,
                     'support': ABsupport.toFixed(4),
-                    'confidence': (ABsupport / Asupport).toFixed(4)
+                    'confidence': (ABsupport / Asupport).toFixed(4),
+                    'lift': (ABsupport / (Asupport * Bsupport)).toFixed(4)
                 });
             }
         }
