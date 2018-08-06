@@ -30,5 +30,6 @@ exports.associationRules = (frequentItemsets, nOfTransactions, prevItemsets) => 
             }
         }
     );
+    console.log(associations);
     return associations;
 }

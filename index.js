@@ -1,6 +1,7 @@
 const { associationRules } = require('./associationRules');
-
-const testdata = [
+require('./dataManipulation');
+//const testdata2 = require('./private/data.json');
+const testdata1 = [
     { tid: 1, name: 'a' },
     { tid: 1, name: 'b' },
     { tid: 1, name: 'c' },
@@ -8,26 +9,12 @@ const testdata = [
     { tid: 2, name: 'c' },
     { tid: 3, name: 'a' },
     { tid: 3, name: 'd' },
-    { tid: 4, name: 'a' },
-    { tid: 4, name: 'c' },
+    { tid: 4, name: 'b' },
+    { tid: 4, name: 'e' },
     { tid: 4, name: 'f' },
-    { tid: 5, name: 'a' },
-    { tid: 5, name: 'd' },
-    { tid: 6, name: 'd' },
-    { tid: 6, name: 'c' },
-    { tid: 6, name: 'e' },
-    { tid: 7, name: 'a' },
-    { tid: 7, name: 'b' },
-    { tid: 7, name: 'c' },
-    { tid: 8, name: 'a' },
-    { tid: 8, name: 'b' },
-    { tid: 8, name: 'c' },
-    { tid: 9, name: 'a' },
-    { tid: 9, name: 'b' },
-    { tid: 9, name: 'c' },
-    { tid: 10, name: 'a' },
-    { tid: 10, name: 'b' },
 ];
+
+const testdata = testdata1;
 
 //Transform data to get the array from transaction 
 groupedTransactions = (data) => {
@@ -108,8 +95,7 @@ getSupportValues = (itemsets, transactions) => {
     return supportItemsetsVals;
 }
 
-//Filtrar por itemset > minsup
-//Probar tambien por filtrado y remove
+//Filter itemset by minsup
 clearMinsupItemsets = (supportVals, minsup) => {
     return supportVals.filter(itemset => itemset.count > minsup);
 }
@@ -134,10 +120,13 @@ getNewTransactions = (transactions, newItemsets) => {
 
 //REPETIR
 
-function AprioriAlgorythm(data, config = { threshold: 0.5, iterations: 1 }) {
-    const transactionsByTID = groupedTransactions(data);
+function AprioriAlgorythm(data, config = { threshold: 0.5, iterations: 1, group: true }) {
+    let transactionsByTID;
+    if (config.group) transactionsByTID = groupedTransactions(data);
+    else transactionsByTID = data;
+
     //TODO 
-    //Implementar inmutabilidad
+    //Implement immutability
     let currentTransactions = null;
     let currentItemset = null;
     let currentSupport = null;
@@ -164,12 +153,13 @@ function AprioriAlgorythm(data, config = { threshold: 0.5, iterations: 1 }) {
 }
 
 const config = {
-    threshold: 0.4,
-    iterations: 2
+    threshold: 0.0025,
+    iterations: 2,
+    group: true
 }
 
 //Frequent itemsets
-const apriori = AprioriAlgorythm(testdata, config)
+const apriori = AprioriAlgorythm(testdata, config);
 const fqis = apriori.frequentItemsets;
 const prevItemsets = apriori.prevItemsets;
 
@@ -177,4 +167,3 @@ const prevItemsets = apriori.prevItemsets;
 const transactionsByTID = groupedTransactions(testdata);
 const numberOfTransations = transactionsByTID.length;
 const rules = associationRules(fqis, numberOfTransations, prevItemsets);
-console.log(rules);
